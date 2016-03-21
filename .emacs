@@ -7,7 +7,7 @@
  '(cursor ((((class color) (background dark)) (:background "#00AA00")) (((class color) (background light)) (:background "#999999")) (t nil))))
 
 ;; Lisp処理系のコマンド
-(add-to-list 'load-path "~/slime-2.13")
+(add-to-list 'load-path "~/slime-2.17")
 ;(add-to-list 'load-path "~/w3-4.0.49")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 ;(add-to-list 'load-path "~/.emacs.d/list/trivial-ssh")
