@@ -6,9 +6,9 @@
  '(default ((t (:family "Lucida Sans Typewriter" :foundry "outline" :slant normal :weight normal :height 83 :width normal))))
  '(cursor ((((class color) (background dark)) (:background "#00AA00")) (((class color) (background light)) (:background "#999999")) (t nil))))
 
-;; Lispˆ—Œn‚ÌƒRƒ}ƒ“ƒh
+;; Lispå‡¦ç†ç³»ã®ã‚³ãƒãƒ³ãƒ‰
 (add-to-list 'load-path "~/slime-2.13")
-(add-to-list 'load-path "~/w3-4.0.49")
+;(add-to-list 'load-path "~/w3-4.0.49")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 ;(add-to-list 'load-path "~/.emacs.d/list/trivial-ssh")
 ;(add-to-list 'load-path "~/.emacs.d/lisp/wsd-mode-master")
@@ -26,10 +26,10 @@
 ;(require 'trivial-ssh)
 
 
-(require 'w3)
-(require 'scenario)
-(require 'default)
-(require 'sr-speedbar)
+;(require 'w3)
+;(require 'scenario)
+;(require 'default)
+;(require 'sr-speedbar)
 ;(require 'wsd-mode)
 (setq sr-speedbar-right-side nil)
 (setq w3-default-homepage "http://localhost/redmine")
@@ -50,9 +50,9 @@
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;;; *.~ ‚Æ‚©‚ÌƒoƒbƒNƒAƒbƒvƒtƒ@ƒCƒ‹‚ğì‚ç‚È‚¢
+;;; *.~ ã¨ã‹ã®ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œã‚‰ãªã„
 (setq make-backup-files nil)
- ;;; .#* ‚Æ‚©‚ÌƒoƒbƒNƒAƒbƒvƒtƒ@ƒCƒ‹‚ğì‚ç‚È‚¢
+ ;;; .#* ã¨ã‹ã®ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œã‚‰ãªã„
 (setq auto-save-default nil)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
