@@ -1,0 +1,213 @@
+(custom-set-faces
+'(default ((t (:family "monospace" :foundry "outline" :slant normal :weight normal :height 120 :width normal))))
+'(cursor ((((class color) (background dark)) (:background "#00AA00")) (((class color) (background light)) (:background "#999999")) (t nil))))
+
+
+(add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path "~/.emacs.d/slime")
+(add-to-list 'load-path "~/.emacs.d/python-mode")
+(add-to-list 'load-path "~/.emacs.d/emacs-flymake-cursor")
+(add-to-list 'load-path "~/.emacs.d/elpa/org-20160425/")
+(setenv "PATH" (concat  "/usr/local/bin/:" (getenv "PATH")))
+
+(require 'eww-customize)
+(require 'ace-link-customize)
+(require 'ox-md)
+(require 'slime)
+(require 'slime-autoloads)
+(slime-setup '(slime-fancy))
+(add-hook 'lisp-mode-hook (lambda ()
+       (slime-mode t)
+       (show-paren-mode)))
+
+(setq inferior-lisp-program "/usr/local/bin/abcl")
+
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+
+(custom-set-variables
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+ '(custom-enabled-themes (quote (wheatgrass)))
+ '(org-export-with-sub-superscripts (quote {}))
+ '(show-paren-mode t))
+
+(put 'upcase-region 'disabled nil)
+
+(defun split-window-and-run-shell ()
+  (progn 
+    (setq w (selected-window))
+    (setq w2 (split-window w nil t))
+    (setq w3 (split-window-below))
+    (command-execute 'balance-windows)
+    (select-window w)
+;    (term "/bin/bash")
+    (eshell)
+    (select-window w2)))
+
+(add-hook 'after-init-hook (lambda () (split-window-and-run-shell)))
+
+(require 'linum)
+(global-linum-mode t)
+
+(require 'package)
+
+(add-to-list 'package-archives
+       '("melpa" . "http://melpa.org/packages/") t)
+
+(package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+(defvar myPackages
+  '(elpy))
+
+(mapc #'(lambda (package)
+    (unless (package-installed-p package)
+      (package-install package)))
+      myPackages)
+
+(elpy-enable)
+(elpy-use-ipython "/usr/local/bin/ipython3")
+
+(fset 'src
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("#+BEGIN_SRC
+
+#+END_SRC" 0 "%d")) arg)))
+
+(fset 'srcm
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([35 43 66 69 71 73 78 95 83 82 67 32 13 96 96 96 13 13 96 96 96 13 35 43 69 78 68 95 83 82 67 67108917 16 14 5 32] 0 "%d")) arg)))
+
+(fset 'pyutf
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("# -*- coding: utf-8 -*-
+" 0 "%d")) arg)))
+
+;; Configure flymake for Python
+;; (when (load "flymake" t)
+;;   (defun flymake-pylint-init ()
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-inplace))
+;;            (local-file (file-relative-name
+;;                         temp-file
+;;                         (file-name-directory buffer-file-name))))
+;;       (list "/usr/local/bin/epylint" (list local-file))))
+;;   (add-to-list 'flymake-allowed-file-name-masks
+;;                '("\\.py\\'" flymake-pylint-init)))
+
+;; Set as a minor mode for Python
+;;(add-hook 'python-mode-hook '(lambda () (flymake-mode)))
+
+;; 
+;;(setq-default flymake-no-changes-timeout '3)
+
+;; Keymaps to navigate to the errors
+;;(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\C-cn" 'flymake-goto-next-error)))
+;;(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\C-cp" 'flymake-goto-prev-error)))
+
+(setq visible-bell nil)
+
+;;(require 'ox-publish)
+;;(setq org-publish-project-alist
+;;      '(
+;;        ("html"
+;;         :publishing-directory "./html/"
+;;         :recursive t
+;;         :publishing-function org-html-publish-to-html
+;;         :headline-levels 4             ; Just the default for this project.
+;;         :auto-preamble t
+;;         )
+;;        ("all" :components ("html" "pdf")) ))
+
+(defun lisp-canvas-template ()
+  (interactive)
+  (insert
+"(ql:quickload :cl-who)
+(ql:quickload :parenscript)
+(defpackage :canvas-tutorial
+  (:use :cl :cl-who :parenscript))
+(in-package :canvas-tutorial)
+
+(with-open-file
+    (out \"html/tutorial-0x.html\" :direction :output
+         :if-does-not-exist :create :if-exists :supersede)
+  (with-html-output (out nil :prologue t :indent t)
+    (:html
+     (:head
+      (:meta :charset \"utf-8\")
+      (:script :type \"application/javascript\"
+               (str (ps
+                     (defun draw ()
+
+     (:body :onload \"draw();\"
+      (:canvas :id \"canvas\" :width 150 :height 150)))))"))
+
+(defun lct ()
+  (interactive)
+  (lisp-canvas-template))
+
+(global-set-key (kbd "C-c j")  'windmove-left)
+(global-set-key (kbd "C-c k")  'windmove-down)
+(global-set-key (kbd "C-c i")    'windmove-up)
+(global-set-key (kbd "C-c l") 'windmove-right)
+(global-set-key (kbd "M-u") 'yank-pop-forward)
+
+;; roswell
+;;(load (expand-file-name "~/.roswell/impls/ALL/ALL/quicklisp/slime-helper.el"))
+;;(setq inferior-lisp-program "ros -L sbcl -Q run")
+
+;; (setf slime-lisp-implementations
+;;       `((sbcl    ("sbcl" "--dynamic-space-size" "2000"))
+;;         (roswell ("ros" "dynamic-space-size=2000" "-Q" "-l" "~/.sbclrc" "run"))))
+;; (setf slime-default-lisp 'roswell)
+;; (setq inferior-lisp-program "ros -L sbcl -Q -l ~/.sbclrc run")
+
+(defun insert-roswell-header ()
+  (interactive)
+  (insert
+"#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 \"$@\"
+|#
+"))
+
+(defun irh ()
+  (interactive)
+  (insert-roswell-header))
+
+(defun yank-pop-forward ()
+  (interactive)
+  (yank-pop -1))
+
+(defun gitc ()
+  (interactive)
+  (insert
+   "git commit -a -m \"update\""))
+
+(defun gitp ()
+  (interactive)
+  (insert
+   "git push -u origin master"))
+
+(defun ssh ()
+  (interactive)
+  (insert
+   "cd /ssh:192.168.20.195:~"))
+
+(defun error-format ()
+  (interactive)
+  (insert
+   "###
+- エラー内容: 
+
+- エラー事象: 
+
+- 対処:
+
+- 推測エラー原因:
+"))
+
