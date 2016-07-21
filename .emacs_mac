@@ -232,8 +232,7 @@ exec ros -Q -- $0 \"$@\"
 (defun cl-header ()
   (interactive)
   (insert
-"
-(load "/Users/ko_yoyo/quicklisp/setup.lisp")
+"(load \"/Users/ko_yoyo/quicklisp/setup.lisp\")
 (ql:quickload '(:custom-tools))
 
 (defpackage :
