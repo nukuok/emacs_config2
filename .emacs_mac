@@ -47,7 +47,13 @@
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (setq flymake-python-pyflakes-executable "/usr/local/bin/flake8")
 (custom-set-variables
- '(flymake-python-pyflakes-extra-arguments (quote ("--max-line-length=120" "--ignore=E124" "--ignore=E126" "--ignore=E128"))))
+ '(flymake-python-pyflakes-extra-arguments (quote ("--max-line-length=79" "--ignore=E124" "--ignore=E126" "--ignore=E128"))))
+
+;; (add-hook 'java-mode-hook 'flymake-mode-on)
+;; (defun my-java-flymake-init ()
+;;   (list "javac" (list (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-with-folder-structure))))
+;; (add-to-list 'flymake-allowed-file-name-masks '("\\.java$" my-java-flymake-init flymake-simple-cleanup))
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -143,6 +149,7 @@
 (global-set-key (kbd "C-c k")  'windmove-down)
 (global-set-key (kbd "C-c i")    'windmove-up)
 (global-set-key (kbd "C-c l") 'windmove-right)
+(global-set-key (kbd "C-c r") 'indent-region)
 (global-set-key (kbd "M-u") 'yank-pop-forward)
 
 ;; roswell
@@ -225,9 +232,14 @@ exec ros -Q -- $0 \"$@\"
 (defun cl-header ()
   (interactive)
   (insert
-"(defpackage :
+"
+(load "/Users/ko_yoyo/quicklisp/setup.lisp")
+(ql:quickload '(:custom-tools))
+
+(defpackage :
   (:use :cl :cl-user)
   (:export :))
+
 (in-package : )"))
 
 (defun export-lang1 ()
@@ -240,4 +252,9 @@ exec ros -Q -- $0 \"$@\"
   (insert
    "export LANG=en_US.UTF-8"))
 
+
+(defun load-ql ()
+  (interactive)
+  (insert
+   "(load \"/Users/ko_yoyo/quicklisp/setup.lisp\")"))
 
