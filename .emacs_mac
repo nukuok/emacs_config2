@@ -35,6 +35,8 @@
 (require 'slime)
 (require 'slime-autoloads)
 
+(setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/8046/plantuml.8046.jar")
+
 (setq inferior-lisp-program "/Users/ko_yoyo/Languages/ccl/dx86cl64")
 ;;(setq inferior-lisp-program "/usr/local/bin/abcl")
 
@@ -69,8 +71,14 @@
  '(org-export-with-sub-superscripts (quote {}))
  '(show-paren-mode t))
 
+(defun org-mode-init ()
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (add-to-list 'org-babel-load-languages '(plantuml . t))))
+
 (add-hook 'org-mode-hook
           (lambda () (face-remap-add-relative 'default :family "Monospace")))
+(add-hook 'org-mode-hook 'org-mode-init)
 
 (put 'upcase-region 'disabled nil)
 
@@ -97,10 +105,18 @@
 
 #+END_SRC" 0 "%d")) arg)))
 
-(fset 'srcm
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([35 43 66 69 71 73 78 95 83 82 67 32 13 96 96 96 13 13 96 96 96 13 35 43 69 78 68 95 83 82 67 67108917 16 14 5 32] 0 "%d")) arg)))
+(defun cs-srcm ()
+  (interactive)
+  (insert
+"#+BEGIN_SRC text
+```
 
-(fset 'pyutf
+```
+#+END_SRC")
+  (dotimes (number 23)
+    (backward-char)))
+
+(fset 'cs-pyutf
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("# -*- coding: utf-8 -*-
 " 0 "%d")) arg)))
 
@@ -118,7 +134,7 @@
 ;;         )
 ;;        ("all" :components ("html" "pdf")) ))
 
-(defun lisp-canvas-template ()
+(defun cs-lisp-canvas-template ()
   (interactive)
   (insert
 "(ql:quickload :cl-who)
@@ -141,7 +157,7 @@
      (:body :onload \"draw();\"
       (:canvas :id \"canvas\" :width 150 :height 150)))))"))
 
-(defun lct ()
+(defun cs-lct ()
   (interactive)
   (lisp-canvas-template))
 
@@ -150,7 +166,10 @@
 (global-set-key (kbd "C-c i")    'windmove-up)
 (global-set-key (kbd "C-c l") 'windmove-right)
 (global-set-key (kbd "C-c r") 'indent-region)
-(global-set-key (kbd "M-u") 'yank-pop-forward)
+(global-set-key (kbd "M-u") 'cs-yank-pop-forward)
+;; Unbind Pesky Sleep Button
+(global-unset-key [(control z)])
+(global-unset-key [(control x)(control z)])
 
 ;; roswell
 ;;(load (expand-file-name "~/.roswell/impls/ALL/ALL/quicklisp/slime-helper.el"))
@@ -162,7 +181,7 @@
 ;; (setf slime-default-lisp 'roswell)
 ;; (setq inferior-lisp-program "ros -L sbcl -Q -l ~/.sbclrc run")
 
-(defun insert-roswell-header ()
+(defun cs-insert-roswell-header ()
   (interactive)
   (insert
 "#!/bin/sh
@@ -172,11 +191,11 @@ exec ros -Q -- $0 \"$@\"
 |#
 "))
 
-(defun irh ()
+(defun cs-irh ()
   (interactive)
   (insert-roswell-header))
 
-(defun yank-pop-forward ()
+(defun cs-yank-pop-forward ()
   (interactive)
   (yank-pop -1))
 
@@ -213,7 +232,7 @@ exec ros -Q -- $0 \"$@\"
 - 推測エラー原因:
 "))
 
-(defun orgheader ()
+(defun cs-orgheader ()
   (interactive)
   (insert
 "#+TITLE: 
@@ -252,8 +271,80 @@ exec ros -Q -- $0 \"$@\"
    "export LANG=en_US.UTF-8"))
 
 
-(defun load-ql ()
+(defun cs-load-ql ()
   (interactive)
   (insert
    "(load \"/Users/ko_yoyo/quicklisp/setup.lisp\")"))
 
+(defun cs-py-path ()
+  (interactive)
+  (insert
+   "import sys\nsys.path.append('/Users/ko_yoyo/Desktop/program/python/20160830-scripts/')"))
+
+
+(defun my-dictionary-search ()
+  (interactive)
+  (let ((word (current-word))
+	(enable-recursive-minibuffers t)
+	(val))
+    (setq val (read-from-minibuffer
+	       (concat "Word"
+		       (when word
+			 (concat " (" word ")"))
+		       ": ")))
+    (dictionary-new-search
+     (cons (cond
+	    ((and (equal val "") word)
+	     word)
+	    ((> (length val) 0)
+	     val)
+	    (t
+	     (error "No word to lookup")))
+	   dictionary-default-dictionary))))
+
+(defun cs-orgimg ()
+  (interactive)
+  (insert
+"#+BEGIN_SAMPLE
+#+attr_html: :width px
+[[file:]]
+#+END_SAMPLE"))
+
+;; (use-package markdown-mode
+;; 	     :ensure t
+;; 	     :commands (markdown-mode gfm-mode)
+;; 	     :mode (("README\\.md\\'" . gfm-mode)
+;; 		    ("\\.md\\'" . markdown-mode)
+;; 		    ("\\.markdown\\'" . markdown-mode))
+;; 	     :init (setq markdown-command "multimarkdown"))
+
+(defun cs-insert_template ()
+  (interactive)
+  (insert
+"(defun  ()
+  (interactive)
+  (insert
+\"\"))"
+))
+
+
+(defun cs-py-main ()
+  (interactive)
+  (insert
+"if __name__ == '__main__':
+    "))
+
+
+(require 'whitespace)
+(setq whitespace-style '(face           ; faceで可視化
+                         trailing       ; 行末
+                         tabs           ; タブ
+;;                         empty          ; 先頭/末尾の空行
+                         space-mark     ; 表示のマッピング
+                         tab-mark
+                         ))
+
+(setq whitespace-display-mappings
+      '((tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])))
+
+(global-whitespace-mode 1)
