@@ -310,6 +310,18 @@ exec ros -Q -- $0 \"$@\"
 [[file:]]
 #+END_SAMPLE"))
 
+(defun cs-orguml ()
+  (interactive)
+  (insert
+"#+BEGIN_SRC plantuml :file .png :cmdline -charset UTF-8
+skinparam shadowing false
+skinparam monochrome true
+
+#+END_SRC
+")
+  (dotimes (number 92)
+    (backward-char)))
+
 ;; (use-package markdown-mode
 ;; 	     :ensure t
 ;; 	     :commands (markdown-mode gfm-mode)
@@ -318,7 +330,7 @@ exec ros -Q -- $0 \"$@\"
 ;; 		    ("\\.markdown\\'" . markdown-mode))
 ;; 	     :init (setq markdown-command "multimarkdown"))
 
-(defun cs-insert_template ()
+(defun cs-insert-template ()
   (interactive)
   (insert
 "(defun  ()
@@ -348,3 +360,26 @@ exec ros -Q -- $0 \"$@\"
       '((tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])))
 
 (global-whitespace-mode 1)
+(put 'erase-buffer 'disabled nil)
+
+(defun cs-py-unittest ()
+  (interactive)
+  (insert
+"import unittest
+from unittest.mock import patch
+from unittest.mock import Mock
+
+class Test_____(unittest.TestCase):
+    def setUp(self):
+        new_sysmodules = sys.modules.copy()
+        new_sysmodules[''] = Mock()
+        self.patcher = patch.dict(sys.modules, new_sysmodules)
+        self.patcher.start()
+
+    def tearDown(self):
+        self.patcher.stop()
+
+    @patch('', return_value=)
+    def test____():
+        pass
+"))
