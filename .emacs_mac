@@ -1,6 +1,10 @@
 (custom-set-faces
-'(default ((t (:family "monospace" :foundry "outline" :slant normal :weight normal :height 120 :width normal))))
-'(cursor ((((class color) (background dark)) (:background "#00AA00")) (((class color) (background light)) (:background "#999999")) (t nil))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "monospace" :foundry "outline" :slant normal :weight normal :height 120 :width normal))))
+ '(cursor ((((class color) (background dark)) (:background "#00AA00")) (((class color) (background light)) (:background "#999999")) (t nil))))
 
 (require 'package)
 
@@ -49,7 +53,23 @@
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (setq flymake-python-pyflakes-executable "/usr/local/bin/flake8")
 (custom-set-variables
- '(flymake-python-pyflakes-extra-arguments (quote ("--max-line-length=79" "--ignore=E124" "--ignore=E126" "--ignore=E128"))))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
+ '(custom-enabled-themes (quote (wheatgrass)))
+ '(flymake-python-pyflakes-extra-arguments
+   (quote
+    ("--max-line-length=129" "--ignore=E124" "--ignore=E126" "--ignore=E128")))
+ '(org-export-with-sub-superscripts (quote {}))
+ '(package-selected-packages
+   (quote
+    (web-mode scala-mode slime ox-gfm markdown-mode flymake-python-pyflakes elpy dictionary ace-link)))
+ '(show-paren-mode t))
 
 ;; (add-hook 'java-mode-hook 'flymake-mode-on)
 ;; (defun my-java-flymake-init ()
@@ -62,14 +82,7 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
-(custom-set-variables
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#242424" "#e5786d" "#95e454" "#cae682" "#8ac6f2" "#333366" "#ccaa8f" "#f6f3e8"])
- '(custom-enabled-themes (quote (wheatgrass)))
- '(org-export-with-sub-superscripts (quote {}))
- '(show-paren-mode t))
+
 
 (defun org-mode-init ()
   (org-babel-do-load-languages
@@ -83,7 +96,7 @@
 (put 'upcase-region 'disabled nil)
 
 (defun split-window-and-run-shell ()
-  (progn 
+  (progn
     (setq w (selected-window))
     (setq w2 (split-window w nil t))
     (setq w3 (split-window-below))
@@ -223,9 +236,9 @@ exec ros -Q -- $0 \"$@\"
   (interactive)
   (insert
    "###
-- エラー内容: 
+- エラー内容:
 
-- エラー事象: 
+- エラー事象:
 
 - 対処:
 
@@ -235,9 +248,9 @@ exec ros -Q -- $0 \"$@\"
 (defun cs-orgheader ()
   (interactive)
   (insert
-"#+TITLE: 
+"#+TITLE:
 #+OPTIONS: html-postamble:nil
-#+HTML_HEAD: <style> 
+#+HTML_HEAD: <style>
 #+HTML_HEAD: table {border-right: 1px solid black; border-left: 1px solid black;font-family: monospace;}
 #+HTML_HEAD: td {width: 300px; border-right: 1px solid black; border-left: 1px solid black}
 #+HTML_HEAD: td {padding-top: 1px; padding-bottom: 1px; padding-left: 5px; padding-right: 5px}
@@ -274,7 +287,14 @@ exec ros -Q -- $0 \"$@\"
 (defun cs-load-ql ()
   (interactive)
   (insert
-   "(load \"/Users/ko_yoyo/quicklisp/setup.lisp\")"))
+   "(load \"/Users/ko_yoyo/quicklisp/setup.lisp\")
+(ql:quickload )
+
+(defpackage :
+  (:use :cl ))
+
+(in-package : "))
+
 
 (defun cs-py-path ()
   (interactive)
@@ -383,3 +403,98 @@ class Test_____(unittest.TestCase):
     def test____():
         pass
 "))
+
+(defun cs-py-webserver ()
+  (interactive)
+  (insert
+"if __name__ == '__main__':
+    from wsgiref.simple_server import make_server
+
+    port = 8888
+    server = make_server('', port, application)
+    print(\"Serving on port %d\" % port)
+    server.serve_forever()
+"))
+
+(defun cs-html-header ()
+  (interactive)
+  (insert
+"<html>
+  <head>
+    <meta charset=\"utf-8\">
+    <script src=\"https://d3js.org/d3.v4.min.js\"></script>
+  </head>
+  <body>
+  </body>
+</html>
+"))
+
+(defun cs-ajax-request ()
+  (interactive)
+  (insert
+"function loadXMLDoc(url, func)
+{
+    xmlhttp=new XMLHttpRequest();
+
+    function state_Change()
+    {
+	if (xmlhttp.readyState==4)
+	{// 4 = \"loaded\"
+	    if (xmlhttp.status==200) {// 200 = \"OK\"
+		func()
+	    } else {
+		alert(\"Problem retrieving data:\" + xmlhttp.statusText);
+	    }
+	}
+    }
+
+    xmlhttp.onreadystatechange=state_Change;
+    xmlhttp.open(\"GET\", url, true);
+    xmlhttp.send(null);}"))
+
+(defun cs-py-ajax-response ()
+  (interactive)
+  (insert
+"    start_response(\"200 OK\", [('Access-Control-Allow-Origin', 'null'),
+                              ('Content-Length', '4')
+                              ])
+    return [b'txt2']
+"))
+
+(defun export-pypath ()
+  (interactive)
+  (insert
+"export PYTHONPATH=/Users/ko_yoyo/commonscripts/python"))
+
+(defun cs-py-np ()
+  (interactive)
+  (insert
+"import numpy as np
+"))
+
+(defun cs-py-pd ()
+  (interactive)
+  (insert
+"import pandas as pd
+"))
+
+(defun cs-py-sps ()
+  (interactive)
+  (insert
+"import scipy.sparse as sps
+"))
+
+(setq auto-mode-alist
+  (append
+   '(("\\.[sx]?html?\\(\\.[a-zA-Z_]+\\)?\\'" . web-mode))
+   auto-mode-alist))
+
+(defun cs-py-plt ()
+  (interactive)
+  (insert
+"import matplotlib.pyplot as plt"))
+
+(defun cs-today ()
+  (interactive)
+  (insert (format-time-string "%Y%m%d")))
+
