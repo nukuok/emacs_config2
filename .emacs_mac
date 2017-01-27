@@ -118,6 +118,13 @@
 
 #+END_SRC" 0 "%d")) arg)))
 
+(defun cs-src ()
+  (interactive)
+  (insert
+"#+BEGIN_SRC text
+
+#+END_SRC"))
+
 (defun cs-srcm ()
   (interactive)
   (insert
@@ -215,7 +222,7 @@ exec ros -Q -- $0 \"$@\"
 (defun gitc ()
   (interactive)
   (insert
-   "git commit -a -m \"update\""))
+   "git commit -a -m \"[update]\""))
 
 (defun gitp ()
   (interactive)
@@ -226,6 +233,16 @@ exec ros -Q -- $0 \"$@\"
   (interactive)
   (insert
    "git status"))
+
+(defun gitt ()
+  (interactive)
+  (insert
+   "git tag v"))
+
+(defun gitpt ()
+  (interactive)
+  (insert
+   "git push --tags"))
 
 (defun ssh ()
   (interactive)
@@ -478,6 +495,12 @@ class Test_____(unittest.TestCase):
 "import pandas as pd
 "))
 
+(defun cs-py-tf ()
+  (interactive)
+  (insert
+"import tensorflow as tf
+"))
+
 (defun cs-py-sps ()
   (interactive)
   (insert
@@ -486,7 +509,8 @@ class Test_____(unittest.TestCase):
 
 (setq auto-mode-alist
   (append
-   '(("\\.[sx]?html?\\(\\.[a-zA-Z_]+\\)?\\'" . web-mode))
+   '(("\\.[sx]?html?\\(\\.[a-zA-Z_]+\\)?\\'" . web-mode)
+     ("\\.mm\\'" . c++-mode))
    auto-mode-alist))
 
 (defun cs-py-plt ()
@@ -498,3 +522,74 @@ class Test_____(unittest.TestCase):
   (interactive)
   (insert (format-time-string "%Y%m%d")))
 
+(defun cs-d3-identity ()
+  (interactive)
+  (insert
+"function(d){return d;}"))
+
+(defun cs-d3-di ()
+  (interactive)
+  (insert
+"function(d,i){}"))
+
+(defun cs-py-realpath ()
+  (interactive)
+  (insert
+"os.path.dirname(os.path.realpath(__file__))"))
+
+(defun cs-py-dokuten ()
+  (interactive)
+  (insert
+"unicodedata.normalize('NFC', )"))
+
+(defun cs-py-httprequest ()
+  (interactive)
+  (insert
+"import urllib.request
+h = urllib.request.urlopen("").read()"))
+
+(defun cs-py-readfile ()
+  (interactive)
+  (insert
+"from pathlib import Path
+Path('index2.html').read_text()"))
+
+(defun cs-py-jsonload ()
+  (interactive)
+  (insert
+"import json
+
+with open('') as fid:
+    data = json.load(fid)"))
+
+(defun cs-find ()
+  (interactive)
+  (insert
+"find ./ -type f | xargs grep "))
+
+(defun cs-d3-add-svg ()
+  (interactive)
+  (insert
+"var svg = d3.select(\"body\")
+    .append(\"svg\")
+    .attr(\"width\", 800)
+    .attr(\"height\", 600)"))
+
+
+
+;; var drag = d3.drag()
+;;     .on("drag", function(d,i) {
+;; 	if (typeof(d.transform) == "undefined"){
+;; 	    d.transform = {};
+;; 	    d.transform.x = 0;
+;; 	    d.transform.y = 0;
+;; 	}
+;;         d.transform.x += d3.event.dx;
+;;         d.transform.y += d3.event.dy;
+;;         d3.select(this).attr("transform", function(d,i){
+;;             return "translate(" + [ d.transform.x,d.transform.y ] + ")"
+;;         })
+;; });
+
+;; .text(function(d){ return d.hostname; })
+;; .call(drag)
